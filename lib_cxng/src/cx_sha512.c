@@ -16,7 +16,7 @@
  *  limitations under the License.
  ********************************************************************************/
 
-#if defined(HAVE_SHA512) || defined(HAVE_SHA384)
+#if defined(HAVE_SHA512) || defined(HAVE_SHA384) || defined(HAVE_SHA512_256)
 
 #include "cx_ram.h"
 #include "cx_sha512.h"
@@ -50,6 +50,19 @@ const cx_hash_info_t cx_sha512_info
        NULL};
 #endif  // HAVE_SHA512
 
+#ifdef HAVE_SHA512_256
+const cx_hash_info_t cx_sha512_256_info
+    = {CX_SHA512_256,
+       CX_SHA512_256_SIZE,
+       SHA512_BLOCK_SIZE,
+       sizeof(cx_sha512_t),
+       (cx_err_t(*)(cx_hash_t * ctx)) cx_sha512_256_init_no_throw,
+       (cx_err_t(*)(cx_hash_t * ctx, const uint8_t *data, size_t len)) cx_sha512_update,
+       (cx_err_t(*)(cx_hash_t * ctx, uint8_t *digest)) cx_sha512_final,
+       NULL,
+       NULL};
+#endif  // HAVE_SHA512_256
+
 #ifndef HAVE_SHA512_WITH_INIT_ALT_METHOD
 
 #if defined(HAVE_SHA384)
@@ -73,6 +86,18 @@ static const uint64bits_t hzero[] = {_64BITS(0x6a09e667, 0xf3bcc908),
                                      _64BITS(0x5be0cd19, 0x137e2179)};
 #endif
 
+#if defined(HAVE_SHA512_256)
+// SHA-512/256 initial hash values per FIPS 180-4
+static const uint64bits_t hzero_512_256[] = {_64BITS(0x22312194, 0xfc2bf72c),
+                                             _64BITS(0x9f555fa3, 0xc84c64c2),
+                                             _64BITS(0x2393b86b, 0x6f53b151),
+                                             _64BITS(0x96387719, 0x5940eabd),
+                                             _64BITS(0x96283ee2, 0xa88effe3),
+                                             _64BITS(0xbe5e1e25, 0x53863992),
+                                             _64BITS(0x2b0199fc, 0x2c85b8aa),
+                                             _64BITS(0x0eb72ddc, 0x81c52ca2)};
+#endif
+
 #if defined(HAVE_SHA384)
 cx_err_t cx_sha384_init_no_throw(cx_sha512_t *hash)
 {
@@ -89,6 +114,16 @@ cx_err_t cx_sha512_init_no_throw(cx_sha512_t *hash)
     memset(hash, 0, sizeof(cx_sha512_t));
     hash->header.info = &cx_sha512_info;
     memmove(hash->acc, hzero, sizeof(hzero));
+    return CX_OK;
+}
+#endif
+
+#if defined(HAVE_SHA512_256)
+cx_err_t cx_sha512_256_init_no_throw(cx_sha512_t *hash)
+{
+    memset(hash, 0, sizeof(cx_sha512_t));
+    hash->header.info = &cx_sha512_256_info;
+    memmove(hash->acc, hzero_512_256, sizeof(hzero_512_256));
     return CX_OK;
 }
 #endif
@@ -455,7 +490,7 @@ cx_err_t cx_sha512_final(cx_sha512_t *ctx, uint8_t *digest)
 #endif
     cx_sha512_block(ctx);
     // provide result
-    len = (ctx->header.info->md_type == CX_SHA512) ? 512 >> 3 : 384 >> 3;
+    len = ctx->header.info->output_size;
 #ifdef ARCH_LITTLE_ENDIAN
     cx_swap_buffer64((uint64bits_t *) acc, 8);
 #endif
@@ -479,4 +514,4 @@ size_t cx_hash_sha512(const uint8_t *in, size_t in_len, uint8_t *out, size_t out
 }
 #endif
 
-#endif  // defined (HAVE_SHA512) || defined(HAVE_SHA384)
+#endif  // defined (HAVE_SHA512) || defined(HAVE_SHA384) || defined(HAVE_SHA512_256)
