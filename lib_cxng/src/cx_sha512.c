@@ -127,6 +127,16 @@ cx_err_t cx_sha512_256_init_no_throw(cx_sha512_t *hash)
     return CX_OK;
 }
 #endif
+#else
+#if defined(HAVE_SHA384)
+cx_err_t cx_sha384_init_no_throw(cx_sha512_t *hash);
+#endif
+#if defined(HAVE_SHA512)
+cx_err_t cx_sha512_init_no_throw(cx_sha512_t *hash);
+#endif
+#if defined(HAVE_SHA512_256)
+cx_err_t cx_sha512_256_init_no_throw(cx_sha512_t *hash);
+#endif
 #endif  // HAVE_SHA512_WITH_INIT_ALT_METHOD
 
 #ifndef HAVE_SHA512_WITH_BLOCK_ALT_METHOD
