@@ -34,6 +34,7 @@
  *   - SHA3_256
  *   - SHA3_512
  *   - SHA512
+ *   - SHA512_256
  */
 
 #ifndef LCX_HASH_H
@@ -73,6 +74,8 @@ enum cx_md_e {
     CX_SHAKE256 = 11,  ///< SHAKE-256 digest
     CX_SHA3_256 = 12,  ///< SHA3-256 digest
     CX_SHA3_512 = 13,  ///< SHA3-512 digest
+    // 32 bytes
+    CX_SHA512_256 = 14,  ///< SHA-512/256 digest
 };
 
 #define SHA256_BLOCK_SIZE 64

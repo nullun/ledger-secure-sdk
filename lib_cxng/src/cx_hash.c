@@ -63,6 +63,11 @@ const cx_hash_info_t *cx_hash_get_info(cx_md_t md_type)
             return &cx_sha512_info;
 #endif
 
+#ifdef HAVE_SHA512_256
+        case CX_SHA512_256:
+            return &cx_sha512_256_info;
+#endif
+
 #ifdef HAVE_SHA3
         case CX_SHA3:
         case CX_SHA3_256:

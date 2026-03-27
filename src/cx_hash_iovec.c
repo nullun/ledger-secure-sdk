@@ -127,6 +127,18 @@ cx_err_t cx_sha512_hash_iovec(const cx_iovec_t *iovec,
 }
 #endif
 
+#ifdef HAVE_SHA512_256
+cx_err_t cx_sha512_256_hash_iovec(const cx_iovec_t *iovec,
+                                  size_t            iovec_len,
+                                  uint8_t           digest[static CX_SHA512_256_SIZE])
+{
+    cx_sha512_t  sha512;
+    cx_sha512_t *hash = &sha512;
+
+    return hash_iovec(&hash->header, sizeof(cx_sha512_t), CX_SHA512_256, iovec, iovec_len, digest);
+}
+#endif
+
 #ifdef HAVE_SHA3
 #define ALLOCATE_SHA3_HASH() \
     cx_sha3_t  sha3;         \
