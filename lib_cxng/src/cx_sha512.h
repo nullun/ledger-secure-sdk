@@ -19,7 +19,7 @@
 #ifndef CX_SHA512_H
 #define CX_SHA512_H
 
-#if defined(HAVE_SHA512) || defined(HAVE_SHA384)
+#if defined(HAVE_SHA512) || defined(HAVE_SHA384) || defined(HAVE_SHA512_256)
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -33,6 +33,10 @@ extern const cx_hash_info_t cx_sha384_info;
 extern const cx_hash_info_t cx_sha512_info;
 #endif  // HAVE_SHA512
 
-#endif  // defined(HAVE_SHA512) || defined(HAVE_SHA384)
+#ifdef HAVE_SHA512_256
+extern const cx_hash_info_t cx_sha512_256_info;
+#endif  // HAVE_SHA512_256
+
+#endif  // defined(HAVE_SHA512) || defined(HAVE_SHA384) || defined(HAVE_SHA512_256)
 
 #endif  // CX_SHA512_H

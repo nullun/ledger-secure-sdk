@@ -149,3 +149,4 @@ cx_cmac_start
 cx_cmac_update
 cx_cmac_finish
 cx_aes_siv_reset
+cx_sha512_256_init_no_throw
